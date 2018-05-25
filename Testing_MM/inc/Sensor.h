@@ -16,6 +16,18 @@ extern int TrueValueFrontLeft;
 extern int TrueValueRight;
 extern int TrueValueFrontRight;
 
+//Need to change 
+extern int targetLeft;
+extern int targetRight;
+extern int targetFront;
+extern int targetFront2;
+
+extern int sensorError;
+
+extern bool frontWall;
+extern bool leftWall;
+extern bool rightWall;
+
 void E_Setup();
 
 void R_Setup();
@@ -23,5 +35,5 @@ void R_Setup();
 void readSensors();
 
 void PrintVals();
-
+void getSensorError();
 void detectWalls();

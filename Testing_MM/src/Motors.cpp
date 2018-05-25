@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include "../inc/PinSetup.h"
 #include "../inc/Motors.h"
+int baseLeftSpeed;
+int baseRightSpeed;
 
 void MotorSetup(){
   pinMode(LMForward, OUTPUT);

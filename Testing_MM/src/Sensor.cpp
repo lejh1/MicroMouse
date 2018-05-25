@@ -25,9 +25,23 @@ bool leftWall;
 bool rightWall;
 
 //Threshold for wall values via Jerry 
-int thresholdFront = 50;
-int thresholdSide = 100;		// Threshold for Wall on side
-int thresholdUpperFront = 300; // Threshold for when mouse close to front wall detecting side walls
+int thresholdFront = 90;
+// int thresholdSideLeft = 155;		// Threshold for Wall on side
+int thresholdSideLeft = 250;		// Threshold for Wall on side
+
+// int thresholdSideRight = 100;		// Threshold for Wall on side
+int thresholdSideRight = 180;		// Threshold for Wall on side
+
+int thresholdUpperFront = 200; // Threshold for when mouse close to front wall detecting side walls
+
+//Targer Values NEED TO CHANGE AND FIND MYSELF
+int targetLeft = 345;//140; 240
+int targetRight = 282;//190; 195
+int targetFront = 85;	// 60 - Threshold for Wall in front from Cell Boundary
+int targetFront2 = 220;	// 30 - Threshold for Wall in front from Half Cell further than boundary
+
+//
+int sensorError;
 
 //Instantiate Emitters
 void E_Setup(){
@@ -47,7 +61,7 @@ void R_Setup(){
 void readSensors(){
     // Duty Cycle of .008 
     // =======FORWARD LEFT====== //
-    // ambientLeft = analogRead(Receiver_L);
+    ambientLeft = analogRead(Receiver_L);
     digitalWrite(Emitter_L, HIGH);
     delayMicroseconds(40);
     rawLeft = analogRead(Receiver_L);
@@ -56,7 +70,7 @@ void readSensors(){
 
     // =======FORWARD RIGHT====== //
     delayMicroseconds(25);
-    // ambientRight = analogRead(Receiver_R);
+    ambientRight = analogRead(Receiver_R);
     digitalWrite(Emitter_R, HIGH);
     delayMicroseconds(40);
     rawRight = analogRead(Receiver_R);
@@ -65,7 +79,7 @@ void readSensors(){
 
     // =======LEFT====== //
     delayMicroseconds(25);
-    // ambientFrontLeft = analogRead(Receiver_FL);
+    ambientFrontLeft = analogRead(Receiver_FL);
     digitalWrite(Emitter_FL, HIGH);
     delayMicroseconds(40);
     rawFrontLeft = analogRead(Receiver_FL);
@@ -74,7 +88,7 @@ void readSensors(){
 
     // =======RIGHT====== //
     delayMicroseconds(25);
-    // ambientFrontRight = analogRead(Receiver_FR);
+    ambientFrontRight = analogRead(Receiver_FR);
     digitalWrite(Emitter_FR, HIGH);
     delayMicroseconds(40);
     rawFrontRight = analogRead(Receiver_FR);
@@ -82,6 +96,8 @@ void readSensors(){
     digitalWrite(Emitter_FR, LOW);
     PrintVals();
 
+	detectWalls();
+	getSensorError();
 
 }
 
@@ -96,6 +112,14 @@ void PrintVals(){
     Serial.println(TrueValueFrontLeft);
     Serial.print("Front Right Value: ");
     Serial.println(TrueValueFrontRight);
+	Serial.print("Sensor Error: ");
+    Serial.println(sensorError);
+	Serial.print("Left Wall: ");
+    Serial.println(leftWall);
+	Serial.print("Right Wall: ");
+    Serial.println(rightWall);
+	Serial.print("Front Wall: ");
+    Serial.println(frontWall);
 }
 
 void detectWalls() {
@@ -106,17 +130,65 @@ void detectWalls() {
 		frontWall = false;
 	}
 
-	if (TrueValueFrontLeft > thresholdSide) {
+	if (TrueValueFrontLeft > thresholdSideLeft) {
 		leftWall = true;
 	}
 	else {
 		leftWall = false;
 	}
 	
-	if (TrueValueFrontRight > thresholdSide) {
+	if (TrueValueFrontRight > thresholdSideRight) {
 		rightWall = true;
 	}
 	else {
 		rightWall = false;
 	}
+}
+
+void getSensorError() {
+
+	// if (TrueValueRight < thresholdUpperFront || TrueValueLeft < thresholdUpperFront) {
+	// 	if (leftWall == true && rightWall == true) {
+	// 		sensorError = TrueValueFrontRight - TrueValueFrontLeft;
+	// 	}
+	// 	else if (leftWall == true && rightWall == false) {
+	// 		sensorError = targetLeft - TrueValueFrontLeft;
+	// 	}
+	// 	else if (rightWall == true && leftWall == false) {
+	// 		sensorError = TrueValueFrontRight - targetRight;
+	// 	}
+	// 	else if (rightWall == false && leftWall == false) {
+	// 		sensorError = 0;
+	// 	}
+	// }
+	// else {
+	// 	sensorError = TrueValueLeft - TrueValueRight;
+	// 	sensorError *= 3;
+	// }
+
+	if (TrueValueRight < thresholdUpperFront || TrueValueLeft < thresholdUpperFront) {
+		if (leftWall == true && rightWall == true) {
+			sensorError = TrueValueFrontRight - TrueValueFrontLeft - (targetRight - targetLeft);
+		}
+		else if (leftWall == true && rightWall == false) {
+			sensorError = targetLeft - TrueValueFrontLeft;
+		}
+		else if (rightWall == true && leftWall == false) {
+			sensorError = TrueValueFrontRight - targetRight;
+		}
+		else if (rightWall == false && leftWall == false) {
+			sensorError = 0;
+		}
+	}
+	else {
+		sensorError = 0;
+	}
+
+	// if (frontWall) {
+	// 	sensorError = (TrueValueLeft - TrueValueRight) * 3;
+	// }
+
+	// if (TrueValueRight > thresholdUpperFront || TrueValueLeft > thresholdUpperFront) {
+	// 	sensorError = (TrueValueLeft - TrueValueRight) * 3;
+	// }
 }

@@ -4,14 +4,25 @@
 #include "../inc/Motors.h"
 #include "../inc/pwm.h"
 #include "../inc/Encoders.h"
-// int leftEncoder;
-// int rightEncoder;
-// int leftEncoderChange;
-// int rightEncoderChange;
-// int encoderCount;
-// int distanceLeft;
-// int leftEncoderOld;
-// int rightEncoderCount;
+int leftEncoder;
+int rightEncoder;
+
+int leftEncoderChange;
+int rightEncoderChange;
+
+int encoderCount;
+int encoderCountW;
+
+int leftEncoderOld;
+int rightEncoderOld;
+double oldEncoderCount;
+
+int encoderChange;
+int rightEncoderCount;
+int leftEncoderCount;
+
+int distanceLeft;
+int distanceLeftW;
 
 volatile int encoderValueLeft = 0;
 volatile int encoderValueRight = 0;
@@ -63,7 +74,6 @@ void countLeftEncoderB() {
 
 void countRightEncoderA() {
 	if (digitalRead(EncoderR_A)) {
-		Serial.println("A");
 		if (digitalRead(EncoderR_B)) { // If channel A leads B
 			encoderValueRight--;
 		}
@@ -72,7 +82,6 @@ void countRightEncoderA() {
 		}
 	}
 	else {
-		Serial.println("AB");
 
 		if (digitalRead(EncoderR_B)) {
 			encoderValueRight++;
@@ -84,7 +93,6 @@ void countRightEncoderA() {
 }
 void countRightEncoderB() {
 	if (digitalRead(EncoderR_B)) {
-		Serial.println("B");
 
 		if (digitalRead(EncoderR_A)) {
 			encoderValueRight++;
@@ -96,33 +104,40 @@ void countRightEncoderB() {
 	else {
 
 		if (digitalRead(EncoderR_A)) {
-			Serial.println("BA");
-
+\
 			encoderValueRight--;
 		}
 		else {
-			Serial.println("BB");
 
 			encoderValueRight++;
 		}
 	}
 }
 
-// void getEncoderStatus(void)
-// {
-// 	leftEncoder = encoderValueLeft;
-// 	rightEncoder = encoderValueRight;
+void getEncoderStatus(void)
+{
+	leftEncoder = encoderValueLeft;
+	rightEncoder = encoderValueRight;
 
-// 	leftEncoderChange = leftEncoder - leftEncoderOld;
-// 	rightEncoderChange = rightEncoder - rightEncoderOld;
-// 	encoderChange = (leftEncoderChange + rightEncoderChange)/2;	 
+	leftEncoderChange = leftEncoder - leftEncoderOld;
+	rightEncoderChange = rightEncoder - rightEncoderOld;
+	encoderChange = (leftEncoderChange + rightEncoderChange)/2;	 
 
-// 	leftEncoderOld = leftEncoder;
-// 	rightEncoderOld = rightEncoder;
+	leftEncoderOld = leftEncoder;
+	rightEncoderOld = rightEncoder;
 					
-// 	leftEncoderCount += leftEncoderChange;
-// 	rightEncoderCount += rightEncoderChange;
-// 	encoderCount =  (leftEncoderCount+rightEncoderCount)/2;	
+	leftEncoderCount += leftEncoderChange;
+	rightEncoderCount += rightEncoderChange;
+	encoderCount =  (leftEncoderCount+rightEncoderCount)/2;	
+	encoderCountW = rightEncoderCount - leftEncoderCount;
 	
-// 	distanceLeft -= encoderChange;// update distanceLeft	
-// }
+	distanceLeft -= encoderChange;// update distanceLeft	
+	distanceLeftW -= rightEncoderChange - leftEncoderChange; // distanceLeftW: CW is positive
+	Serial.println(distanceLeftW);
+
+}
+void printEncoders() {
+	Serial.print(encoderValueLeft);
+	Serial.print(":");
+	Serial.println(encoderValueRight);
+}

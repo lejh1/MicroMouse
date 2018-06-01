@@ -16,8 +16,10 @@ int maxSpeed = 67;
 // int oneTurnDistance = 340;
 // int oneTurnDistance = 185;
 int oneTurnDistance = 501;
+int leftTurnDistance = 492;
+int oneCellDistance = 476;
 
-int oneCellDistance = 520;
+
 double needToDecelerate(int dist, double curSpd, double endSpd) { //speed are in encoder counts/ms, dist is in encoder counts 
 	if (curSpd<0) curSpd = -curSpd;
 	if (endSpd<0) endSpd = -endSpd;
@@ -31,7 +33,9 @@ double needToDecelerate(int dist, double curSpd, double endSpd) { //speed are in
 }
 
 void moveOneCell() {
-	useSensors = false;
+	useSensors =false;
+
+	// useSensors = false;
 	targetSpeedW = 0;
 	targetSpeedX = moveSpeed;
 	distanceLeft = oneCellDistance;
@@ -70,7 +74,7 @@ void moveOneCell() {
 		}
 		targetSpeedX = 0;
 	}	
-
+	useSensors =false;
 	delay(500);
 	oldEncoderCount = encoderCount; //update here for next movement to minimized the counts loss between cells.
 	resetPID();
@@ -83,6 +87,23 @@ void turnRight() {
 	distanceLeftW = -oneTurnDistance;
 	while (distanceLeftW < 0) {
 		targetSpeedW = -turnSpeed;
+		delay(5);
+		// Serial.println(targetSpeedW);
+	}
+	turnFeedback = 0;
+	targetSpeedW = 0;
+	delay(1000);
+	// useSensors = true;
+	resetPID();
+}
+
+void turnLeft() {
+	targetSpeedX = 0;
+	useSensors = false;
+	elapsedMillis wait;
+	distanceLeftW = leftTurnDistance;
+	while (distanceLeftW > 0) {
+		targetSpeedW = turnSpeed;
 		delay(5);
 		// Serial.println(targetSpeedW);
 	}
@@ -117,7 +138,11 @@ void turnRight() {
 // }
 
 void pressToStart(){
-	while(TrueValueLeft < 200){
+	while(1){
+		if(TrueValueLeft > 500){
+			break;
+		}
+		delay(5);
 		// Serial.println("waiting");
 	}
 }

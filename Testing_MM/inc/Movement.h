@@ -1,6 +1,5 @@
 #pragma once 
 #include <Arduino.h>
-//Thomas wrote all this code Justin did nothing
 
 extern int moveSpeed;
 extern int turnSpeed;
@@ -10,11 +9,12 @@ extern int maxSpeed;
 
 extern int oneCellDistance;
 extern int oneTurnDistance;
-
+extern int leftTurnDistance;
 extern elapsedMillis wait_ms;
 extern elapsedMicros wait_us;
 
 double needToDecelerate(int, double, double);
 void moveOneCell();
 void turnRight();
+void turnLeft();
 void pressToStart();

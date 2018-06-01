@@ -44,7 +44,7 @@ double sensorFeedback = 0;
 double turnFeedback = 0;
 double sensor_scale = 6;
 double turn_scale = 1;
-bool useSensors = false;
+bool useSensors = true;
 
 double curSpeedX = 0;
 double curSpeedW = 0;
@@ -114,10 +114,10 @@ void PID() {
 	encoderFeedbackX = rightEncoderChange + leftEncoderChange;
 	encoderFeedbackW = rightEncoderChange - leftEncoderChange;   // Positive if mouse rotates CW
 
-	Serial.print(leftEncoderChange);
-	Serial.print(",");
-	Serial.print(rightEncoderChange);
-	Serial.println();
+	// Serial.print(leftEncoderChange);
+	// Serial.print(",");
+	// Serial.print(rightEncoderChange);
+	// Serial.println();
 
 	if (useSensors) {
 		sensorFeedback = sensorError/sensor_scale;

@@ -25,18 +25,18 @@ bool leftWall;
 bool rightWall;
 
 //Threshold for wall values via Jerry 
-int thresholdFront = 90;
+int thresholdFront = 119;
 // int thresholdSideLeft = 155;		// Threshold for Wall on side
 int thresholdSideLeft = 250;		// Threshold for Wall on side
 
 // int thresholdSideRight = 100;		// Threshold for Wall on side
-int thresholdSideRight = 180;		// Threshold for Wall on side
+int thresholdSideRight = 135;		// Thresho	ld for Wall on side
 
 int thresholdUpperFront = 200; // Threshold for when mouse close to front wall detecting side walls
 
 //Targer Values NEED TO CHANGE AND FIND MYSELF
-int targetLeft = 345;//140; 240
-int targetRight = 282;//190; 195
+int targetLeft = 0;// 325
+int targetRight = 0;//256
 int targetFront = 85;	// 60 - Threshold for Wall in front from Cell Boundary
 int targetFront2 = 220;	// 30 - Threshold for Wall in front from Half Cell further than boundary
 
@@ -188,7 +188,7 @@ void getSensorError() {
 	// 	sensorError = (TrueValueLeft - TrueValueRight) * 3;
 	// }
 
-	// if (TrueValueRight > thresholdUpperFront || TrueValueLeft > thresholdUpperFront) {
-	// 	sensorError = (TrueValueLeft - TrueValueRight) * 3;
-	// }
+	if (TrueValueRight > thresholdUpperFront || TrueValueLeft > thresholdUpperFront) {
+		sensorError = (TrueValueLeft - TrueValueRight);
+	}
 }

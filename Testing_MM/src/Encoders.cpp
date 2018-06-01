@@ -133,7 +133,7 @@ void getEncoderStatus(void)
 	
 	distanceLeft -= encoderChange;// update distanceLeft	
 	distanceLeftW -= rightEncoderChange - leftEncoderChange; // distanceLeftW: CW is positive
-	Serial.println(distanceLeftW);
+	Serial.println(distanceLeft);
 
 }
 void printEncoders() {
